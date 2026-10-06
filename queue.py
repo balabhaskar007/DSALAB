@@ -1,57 +1,49 @@
-# Node structure
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class QueueEx:
-    def __init__(self):
-        self.front = None
-        self.rear = None
-
-    # Enqueue operation
-    def enqueue(self, x):
-        new = Node(x)
-        if self.rear is None:
-            self.front = self.rear = new
+class Queue:
+    def __init__(self,size):
+        self.size = size
+        self.queue = [None]*size
+        self.front = -1
+        self.rear = -1
+    #Enqueue Operation
+    def enqueue(self,x):
+        if self.rear == self.size -1:
+            print("Queue Overflow")
         else:
-            self.rear.next = new
-            self.rear = new
-        # FIXED: Changed 'item' to 'x' so it correctly prints the inserted value
-        print(x, "inserted into the queue")
-
-    # Dequeue operation
+            if self.front == -1:
+                self.front = 0
+            self.rear+=1
+            self.queue[self.rear] = x
+            print(f"{x} inserted in the queue")
+    #Dequeue Operation
     def dequeue(self):
-        if self.front is None:
+        if self.front == -1 or self.front > self.rear:
             print("Queue Underflow")
         else:
-            x = self.front.data
-            self.front = self.front.next
-            if self.front is None:
-                self.rear = None
+            x = self.queue[self.front]
+            self.queue[self.front] = None
+            self.front+=1
             print(f"{x} deleted from the queue")
 
-    # Peek operation
+            if self.front > self.rear:
+                self.front = -1
+                self.rear = -1
+    #Peek Operation
     def peek(self):
-        if self.front is None:
-            print("Queue is empty")
+        if self.front == -1:
+            print("Queue is Empty")
         else:
-            print("Front element:", self.front.data)
-
-    # Display operation
+            print("Front Element:",self.queue[self.front])
+    #Display Operation
     def display(self):
-        if self.front is None:
-            print("Queue is empty")
+        if self.front == -1:
+            print("Queue is Empty")
         else:
-            print("The elements of the queue are:")
-            
-            temp = self.front
-            while temp is not None:
-                print(temp.data)
-                temp = temp.next
+            print("The Elements of the Queue are:")
+            for i in range (self.front,self.rear+1):
+                print(self.queue[i])
 
-q = QueueEx()
-
+size = int(input("Enter the maximum size of the queue: "))
+q = Queue(size)
 while True:
     print("\n----- QUEUE MENU -----")
     print("1. Enqueue")
