@@ -1,65 +1,63 @@
-# Node structure
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+class CircularQueue:
+    def __init__(self, size):
+        self.size = size
+        self.queue = [None] * size
+        self.front = -1
+        self.rear = -1
 
-class CircularQueueEx:
-    def __init__(self):
-        self.front = None
-        self.rear = None
-
-    # Enqueue operation
-    def enqueue(self, x):
-        new = Node(x)
-        if self.front is None:
-            self.front = new
-            self.rear = new
-            new.next = self.front
+    def enqueue(self, item):
+        if (self.rear + 1) % self.size == self.front:
+            print("Queue Overflow")
+        elif self.front == -1:
+            self.front = 0
+            self.rear = 0
+            self.queue[self.rear] = item
+            print(item, "inserted into the queue")
         else:
-            self.rear.next = new
-            self.rear = new
-            self.rear.next = self.front
-        print(x, "inserted into the queue")
-
-    # Dequeue operation
+            self.rear = (self.rear + 1) % self.size
+            self.queue[self.rear] = item
+            print(item, "inserted into the queue")
+            
     def dequeue(self):
-        if self.front is None:
+        if self.front == -1:
             print("Queue Underflow")
         # Only one element is present
         elif self.front == self.rear:
-            x = self.front.data
-            self.front = None
-            self.rear = None
-            print(f"{x} deleted from the queue")
+            item = self.queue[self.front]
+            self.queue[self.front] = None
+            self.front = -1
+            self.rear = -1
+            print(item, "deleted from the queue")
         # More than one element
         else:
-            x = self.front.data
-            self.front = self.front.next
-            self.rear.next = self.front
-            print(f"{x} deleted from the queue")
+            item = self.queue[self.front]
+            self.queue[self.front] = None
+            self.front = (self.front + 1) % self.size
+            print(item, "deleted from the queue")
 
     # Peek operation
     def peek(self):
-        if self.front is None:
+        if self.front == -1:
             print("Queue is empty")
         else:
-            print("Front element:", self.front.data)
+            print("Front element:", self.queue[self.front])
 
     # Display operation
     def display(self):
-        if self.front is None:
+        if self.front == -1:
             print("Queue is empty")
         else:
             print("The elements of the queue are:")
-            temp = self.front
+            i = self.front
             while True:
-                print(temp.data)
-                if temp == self.rear:
+                print(self.queue[i])
+                if i == self.rear:
                     break
-                temp = temp.next
+                i = (i + 1) % self.size
 
-q = CircularQueueEx()
+# Create Circular Queue
+size = int(input("Enter the size of the queue: "))
+q = CircularQueue(size)
 
 while True:
     print("\n----- CIRCULAR QUEUE MENU -----")
@@ -69,7 +67,6 @@ while True:
     print("4. Display")   
     print("5. Exit")      
     choice = int(input("Enter your choice: "))
-    
     if choice == 1:
         item = int(input("Enter the element to enqueue: "))
         q.enqueue(item)
